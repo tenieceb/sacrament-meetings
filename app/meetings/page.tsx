@@ -1,10 +1,11 @@
 import MeetingCard from "@/components/MeetingCard";
 import type {SacramentMeeting} from "@/lib/types";
 
-export const dynamic = 'force-dynamic';
 
 export default async function MeetingsPage() {
-const response = await fetch('/api/meetings');
+  const response = await fetch('/api/meetings', {
+    cache: 'no-store',
+  });
   const meetings: SacramentMeeting[] = await response.json();
 
   return (
