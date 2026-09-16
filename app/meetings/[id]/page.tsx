@@ -1,5 +1,7 @@
 import MeetingDetail from '@/components/MeetingDetail';
 
+export const dynamic = 'force-dynamic';
+
 export default async function MeetingPage({
   params,
 }: {
