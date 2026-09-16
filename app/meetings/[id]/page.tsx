@@ -7,7 +7,7 @@ export default async function MeetingPage({
 }) {
   const { id } = await params;
 
-  const response = await fetch(`http://localhost:3000/api/meetings/${id}`);
+    const response = await fetch(`/api/meetings/${id}`);
   const meeting = await response.json();
 
 return (
