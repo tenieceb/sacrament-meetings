@@ -1,7 +1,5 @@
 import MeetingDetail from '@/components/MeetingDetail';
 
-
-
 export default async function MeetingPage({
   params,
 }: {
@@ -9,9 +7,7 @@ export default async function MeetingPage({
 }) {
   const { id } = await params;
 
-    const response = await fetch(`/api/meetings/${id}`, {
-        cache: 'no-store',
-    });
+  const response = await fetch(`http://localhost:3000/api/meetings/${id}`);
   const meeting = await response.json();
 
 return (
