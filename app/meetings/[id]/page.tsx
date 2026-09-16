@@ -1,4 +1,5 @@
-import MeetingDetail from '@/components/MeetingDetail';
+import MeetingDetail from "@/components/MeetingDetail";
+import { getMeetingById } from "@/lib/meetings-db";
 
 export default async function MeetingPage({
   params,
@@ -7,22 +8,21 @@ export default async function MeetingPage({
 }) {
   const { id } = await params;
 
-  const response = await fetch(`http://localhost:3000/api/meetings/${id}`);
-  const meeting = await response.json();
+  const meeting = getMeetingById(Number(id));
 
-return (
-  <main className="min-h-screen px-8 py-10">
-    <div className="mx-auto max-w-5xl">
-      <h1 className="mb-8 text-3xl font-bold">
-        Meeting Details
-      </h1>
+  return (
+    <main className="min-h-screen px-8 py-10">
+      <div className="mx-auto max-w-5xl">
+        <h1 className="mb-8 text-3xl font-bold">
+          Meeting Details
+        </h1>
 
-      {meeting ? (
-        <MeetingDetail meeting={meeting} />
-      ) : (
-        <p>Meeting not found.</p>
-      )}
-    </div>
-  </main>
-);
+        {meeting ? (
+          <MeetingDetail meeting={meeting} />
+        ) : (
+          <p>Meeting not found.</p>
+        )}
+      </div>
+    </main>
+  );
 }
