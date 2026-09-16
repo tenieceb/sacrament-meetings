@@ -2,8 +2,14 @@ import MeetingCard from "@/components/MeetingCard";
 import type {SacramentMeeting} from "@/lib/types";
 
 export default async function MeetingsPage() {
-  const response = await fetch('http://localhost:3000/api/meetings');
-  const meetings: SacramentMeeting[] = await response.json();
+  const baseUrl =
+    process.env.NODE_ENV === 'development'
+      ? 'http://localhost:3000'
+      : process.env.VERCEL_URL
+        ? `https://${process.env.VERCEL_URL}`
+        : 'http://localhost:3000';
+
+  const response = await fetch(`${baseUrl}/api/meetings`);  const meetings: SacramentMeeting[] = await response.json();
 
   return (
   <main className="min-h-screen px-8 py-10">
