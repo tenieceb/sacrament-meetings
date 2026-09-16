@@ -1,8 +1,10 @@
-export default function Footer() {  
+export default function Footer() {
   return (
-    <footer className="bg-gray-800 text-white py-4 mt-12">
-      <div className="container mx-auto text-center">
-        <p>Copyright &copy; {new Date().getFullYear()} | Teniece Busenbark | All rights reserved</p>
+    <footer className="mt-12 border-t bg-gray-800 py-6 text-white">
+      <div className="mx-auto max-w-5xl px-8 text-center">
+        <p className="text-sm">
+          Copyright &copy; {new Date().getFullYear()} | Teniece Busenbark | All rights reserved
+        </p>
       </div>
     </footer>
   );

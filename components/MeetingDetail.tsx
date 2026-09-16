@@ -1,58 +1,112 @@
-import type { SacramentMeeting } from '@/data/types';
+import type { SacramentMeeting } from '@/lib/types';
 
+export default function MeetingDetail({
+  meeting,
+}: {
+  meeting: SacramentMeeting;
+}) {
+  const [year, month, day] = meeting.date.split('-');
 
-export default function MeetingDetail({ meeting }: { meeting: SacramentMeeting }) {
+  const date = new Date(
+    Number(year),
+    Number(month) - 1,
+    Number(day)
+  ).toLocaleDateString('en-US', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+
   return (
-    <div>
-        <h2>Date: {meeting.date}</h2>
-        <div>
-            <p><strong>Meeting Type:</strong> {meeting.meetingType}</p>
-            <p><strong>Presiding:</strong> {meeting.presiding}</p>
-            <p><strong>Conducting:</strong> {meeting.conducting}</p>
-        </div>
-        <h3>Opening Hymn:</h3>
-            <p>{meeting.openingHymn.number} - {meeting.openingHymn.title}</p>
-        <h3>Opening Prayer:</h3>
-            <p>{meeting.openingPrayer}</p>
-        {meeting.wardBusiness.length > 0 && (
-            <div>
-                <h3>Ward Business:</h3>
-                <ul>
-                    {meeting.wardBusiness.map((item, index) => (
-                        <li key={index}>{item.description}</li>
-                    ))}
-                </ul>
-            </div>
-        )}
-        {meeting.stakeBusiness && (
-            <div>
-                <h3>Stake Business:</h3>
-                <p>Yes</p>
-            </div>
-        )}
-        <h3>Announcements:</h3>
-        <p>{meeting.announcements?.join(', ') || 'None'}</p>
-        <h3>Sacrament Hymn:</h3>
-        <p>{meeting.sacramentHymn.number} - {meeting.sacramentHymn.title}</p>
+    <div className="mx-auto max-w-3xl rounded-lg border bg-white p-8 shadow-sm">
+      <h2 className="mb-6 border-b pb-4 text-2xl font-bold">
+        {date}
+      </h2>
 
-        {meeting.speakers.length > 0 && (
-        <div>
-            <h3>Speakers & Musical Numbers:</h3>
-            <ul>
-            {meeting.speakers.map((speaker, index) => (
-                <li key={index}>
-                <strong>{speaker.name}</strong>
-                {speaker.type === 'speaker' && ` — ${speaker.topic}`}
-                {speaker.type === 'musical-number' && ' — Musical Number'}
-                </li>
-            ))}
-            </ul>
-        </div>
-        )}
-        <h3>Closing Hymn:</h3>
-        <p>{meeting.closingHymn.number} - {meeting.closingHymn.title}</p>
-        <h3>Closing Prayer:</h3>
-        <p>{meeting.closingPrayer}</p>
+    <div className="mb-8 grid gap-2 border-b pb-6">
+      <p>
+        <strong>Meeting Type:</strong> {meeting.meetingType}
+      </p>
+      <p>
+        <strong>Presiding:</strong> {meeting.presiding}
+      </p>
+      <p>
+        <strong>Conducting:</strong> {meeting.conducting}
+      </p>
     </div>
-  );
+
+    <section className="mb-8">
+      <h3 className="mb-2 text-lg font-semibold">Opening Hymn</h3>
+      <p>
+        {meeting.openingHymn.number} - {meeting.openingHymn.title}
+      </p>
+    </section>
+
+    <section className="mb-8">
+      <h3 className="mb-2 text-lg font-semibold">Opening Prayer</h3>
+      <p>{meeting.openingPrayer}</p>
+    </section>
+
+    {meeting.wardBusiness.length > 0 && (
+      <section className="mb-8">
+        <h3 className="mb-2 text-lg font-semibold">Ward Business</h3>
+        <ul className="list-disc space-y-1 pl-6">
+          {meeting.wardBusiness.map((item, index) => (
+            <li key={index}>{item.description}</li>
+          ))}
+        </ul>
+      </section>
+    )}
+
+    {meeting.stakeBusiness && (
+      <section className="mb-8">
+        <h3 className="mb-2 text-lg font-semibold">Stake Business</h3>
+        <p>Yes</p>
+      </section>
+    )}
+
+    <section className="mb-8">
+      <h3 className="mb-2 text-lg font-semibold">Announcements</h3>
+      <p>{meeting.announcements?.join(', ') || 'None'}</p>
+    </section>
+
+    <section className="mb-8">
+      <h3 className="mb-2 text-lg font-semibold">Sacrament Hymn</h3>
+      <p>
+        {meeting.sacramentHymn.number} - {meeting.sacramentHymn.title}
+      </p>
+    </section>
+
+    {meeting.speakers.length > 0 && (
+      <section className="mb-8">
+        <h3 className="mb-2 text-lg font-semibold">
+          Speakers & Musical Numbers
+        </h3>
+
+        <ul className="list-disc space-y-1 pl-6">
+          {meeting.speakers.map((speaker, index) => (
+            <li key={index}>
+              <strong>{speaker.name}</strong>
+              {speaker.type === 'speaker' && ` — ${speaker.topic}`}
+              {speaker.type === 'musical-number' && ' — Musical Number'}
+            </li>
+          ))}
+        </ul>
+      </section>
+    )}
+
+    <section className="mb-8">
+      <h3 className="mb-2 text-lg font-semibold">Closing Hymn</h3>
+      <p>
+        {meeting.closingHymn.number} - {meeting.closingHymn.title}
+      </p>
+    </section>
+
+    <section>
+      <h3 className="mb-2 text-lg font-semibold">Closing Prayer</h3>
+      <p>{meeting.closingPrayer}</p>
+    </section>
+  </div>
+);
 }
