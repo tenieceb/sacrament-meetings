@@ -75,11 +75,15 @@ export async function getMeetingById(
   return (rows[0] as unknown as SacramentMeeting) ?? null;
 }
 
+
+
 // Mutation stubs — will be wired to the database in Week 04
 export async function addMeeting(
   data: Omit<SacramentMeeting, 'id'>
 ): Promise<SacramentMeeting> {
   throw new Error('addMeeting: database implementation coming in Week 04');
+
+
 }
 
 export async function updateMeeting(
@@ -92,3 +96,4 @@ export async function updateMeeting(
 export async function deleteMeeting(id: number): Promise<boolean> {
   throw new Error('deleteMeeting: database implementation coming in Week 04');
 }
+
