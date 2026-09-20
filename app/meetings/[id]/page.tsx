@@ -8,8 +8,9 @@ export default async function MeetingPage({
 }) {
   const { id } = await params;
 
-  const meeting = getMeetingById(Number(id));
-
+  const meeting = await getMeetingById(Number(id));
+  console.log("MEETING:", meeting);
+  
   return (
     <main className="min-h-screen px-8 py-10">
       <div className="mx-auto max-w-5xl">

@@ -12,7 +12,7 @@ export async function GET(
         headers: { 'Content-Type': 'application/json' },
     });
 }
-    const meeting = getMeetingById(meetingId);
+    const meeting = await getMeetingById(meetingId);
 
     if (!meeting) {
         return new Response(JSON.stringify({ error: 'Meeting not found' }), {

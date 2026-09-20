@@ -3,9 +3,10 @@ import Link from 'next/link';
 
 interface MeetingCardProps {
   meeting: SacramentMeeting;
+  isCurrent?: boolean;
 }
 
-export default function MeetingCard({ meeting }: MeetingCardProps) {
+export default function MeetingCard({ meeting, isCurrent=false }: MeetingCardProps) {
   const [year, month, day] = meeting.date.split('-');
 
   const date = new Date(
@@ -20,8 +21,11 @@ export default function MeetingCard({ meeting }: MeetingCardProps) {
   });
 
   return (
-  <Link href={`/meetings/${meeting.id}`} className="block h-full">
-    <article className="h-full rounded-lg border bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md">
+      <Link
+        href={isCurrent ? '/meetings/current' : `/meetings/${meeting.id}`}
+        className="block h-full"
+      >
+      <article className="h-full rounded-lg border bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md">
       <h2 className="mb-4 text-xl font-bold">
         {date}
       </h2>

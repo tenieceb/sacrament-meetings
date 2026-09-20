@@ -2,7 +2,7 @@ import Image from "next/image";
 import MeetingCard from "@/components/MeetingCard";
 import { getMeetings } from "@/lib/meetings-db";
 
-export default function Home() {
+export default async function Home() {
   const today = new Date();
   const dayOfWeek = today.getDay();
 
@@ -13,18 +13,19 @@ export default function Home() {
   }
 
   const sundayString = sunday.toLocaleDateString("en-CA");
+  const meetings = await getMeetings();
 
-  const currentMeetings = getMeetings(sundayString);
+
+
   const currentMeeting =
-    currentMeetings.length > 0 ? currentMeetings[0] : null;
+    meetings.find((meeting) => meeting.date === sundayString) ?? null;
 
   const lastSunday = new Date(sunday);
   lastSunday.setDate(sunday.getDate() - 7);
 
-  const lastSundayString = lastSunday.toLocaleDateString("en-CA");
-
-  const lastMeetings = getMeetings(lastSundayString);
-  const lastMeeting = lastMeetings.length > 0 ? lastMeetings[0] : null;
+  const lastSundayString = lastSunday.toLocaleDateString("en-CA"); 
+  const lastMeeting =
+    meetings.find((meeting) => meeting.date === lastSundayString) ?? null;
 
   return (
     <main className="min-h-screen p-8">
@@ -50,7 +51,7 @@ export default function Home() {
             </h2>
 
             {currentMeeting ? (
-              <MeetingCard meeting={currentMeeting} />
+              <MeetingCard meeting={currentMeeting} isCurrent />
             ) : (
               <p>No upcoming meeting found.</p>
             )}
