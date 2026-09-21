@@ -1,69 +1,86 @@
 import Image from "next/image";
+import MeetingCard from "@/components/MeetingCard";
+import { getMeetings } from "@/lib/meetings-db";
 
-export default function Home() {
+export default async function Home() {
+  const today = new Date();
+  const dayOfWeek = today.getDay();
+
+  const sunday = new Date(today);
+
+  if (dayOfWeek !== 0) {
+    sunday.setDate(today.getDate() + (7 - dayOfWeek));
+  }
+
+  const sundayString = sunday.toLocaleDateString("en-CA");
+  const meetings = await getMeetings();
+
+  const currentMeeting =
+    meetings.find((meeting) => meeting.date === sundayString) ?? null;
+
+  const lastSunday = new Date(sunday);
+  lastSunday.setDate(sunday.getDate() - 7);
+
+  const lastSundayString = lastSunday.toLocaleDateString("en-CA");
+
+  const lastMeeting =
+    meetings.find((meeting) => meeting.date === lastSundayString) ?? null;
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
+    <main className="min-h-screen px-4 py-8 sm:px-8">
+      <div className="mx-auto max-w-5xl">
+        {/* Page heading */}
+        <section className="mb-12 text-center">
+          <h1 className="mb-6 text-2xl font-bold sm:text-3xl">
+            Roosevelt 10th Ward Sacrament Meeting Archive
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+
+          <Image
+            src="/church-house.jpeg"
+            alt="Roosevelt 10th Ward building"
+            width={500}
+            height={300}
+            className="mx-auto rounded-lg shadow-sm"
+          />
+        </section>
+
+        {/* Meeting sections */}
+        <section className="grid grid-cols-1 gap-12 md:grid-cols-2 md:gap-8">
+          {/* Current / Upcoming */}
+          <div className="flex flex-col">
+            <h2 className="mb-4 text-2xl font-semibold">
+              {dayOfWeek === 0 ? "Current Meeting" : "Upcoming Meeting"}
+            </h2>
+
+            <div>
+              {currentMeeting ? (
+                <MeetingCard meeting={currentMeeting} isCurrent />
+              ) : (
+                <div className="rounded-lg border bg-white p-6 shadow-sm">
+                  <p>No upcoming meeting found.</p>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Last Sunday */}
+          <div className="flex flex-col">
+            <h2 className="mb-4 text-2xl font-semibold">
+              Last Sunday
+            </h2>
+
+            <div>
+              {lastMeeting ? (
+                <MeetingCard meeting={lastMeeting} />
+              ) : (
+                <div className="rounded-lg border bg-white p-6 shadow-sm">
+                  <p>No previous meeting found.</p>
+                </div>
+              )}
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
   );
 }
