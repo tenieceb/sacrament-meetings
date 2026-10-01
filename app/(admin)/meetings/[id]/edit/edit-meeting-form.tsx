@@ -1,23 +1,32 @@
 'use client';
 
 import { useActionState } from 'react';
-import { createMeeting } from '@/lib/actions';
+import { updateMeeting } from '@/lib/actions';
+import type { SacramentMeeting } from '@/lib/types';
+
+interface EditMeetingFormProps {
+  meeting: SacramentMeeting;
+}
 
 const initialState = {
   message: null,
   errors: {},
 };
 
-export default function NewMeetingPage() {
+export default function EditMeetingForm({
+  meeting,
+}: EditMeetingFormProps) {
+  const updateMeetingWithId = updateMeeting.bind(null, meeting.id);
+
   const [state, formAction, isPending] = useActionState(
-    createMeeting,
+    updateMeetingWithId,
     initialState
   );
 
   return (
     <main className="min-h-screen px-8 py-10">
       <div className="mx-auto max-w-5xl">
-        <h1 className="mb-8 text-3xl font-bold">New Meeting</h1>
+        <h1 className="mb-8 text-3xl font-bold">Edit Meeting</h1>
 
         <form action={formAction} className="space-y-8">
           {state.message && (
@@ -29,9 +38,11 @@ export default function NewMeetingPage() {
             </p>
           )}
 
-          {/* Basic Meeting Information */}
+          {/* Meeting Information */}
           <section className="space-y-4">
-            <h2 className="text-2xl font-bold">Meeting Information</h2>
+            <h2 className="text-2xl font-bold">
+              Meeting Information
+            </h2>
 
             <div>
               <label
@@ -45,6 +56,7 @@ export default function NewMeetingPage() {
                 type="date"
                 name="date"
                 required
+                defaultValue={meeting.date}
                 aria-describedby="date-error"
                 className="w-full rounded border p-2"
               />
@@ -72,7 +84,7 @@ export default function NewMeetingPage() {
                 id="meetingType"
                 name="meetingType"
                 required
-                defaultValue="regular"
+                defaultValue={meeting.meetingType}
                 aria-describedby="meetingType-error"
                 className="w-full rounded border p-2"
               >
@@ -105,6 +117,7 @@ export default function NewMeetingPage() {
                 id="presiding"
                 name="presiding"
                 required
+                defaultValue={meeting.presiding}
                 aria-describedby="presiding-error"
                 className="w-full rounded border p-2"
               />
@@ -132,6 +145,7 @@ export default function NewMeetingPage() {
                 id="conducting"
                 name="conducting"
                 required
+                defaultValue={meeting.conducting}
                 aria-describedby="conducting-error"
                 className="w-full rounded border p-2"
               />
@@ -159,6 +173,7 @@ export default function NewMeetingPage() {
                 id="announcements"
                 name="announcements"
                 rows={4}
+                defaultValue={(meeting.announcements ?? []).join('\n')}
                 placeholder="One announcement per line"
                 aria-describedby="announcements-error"
                 className="w-full rounded border p-2"
@@ -194,6 +209,7 @@ export default function NewMeetingPage() {
                 name="openingHymnNumber"
                 min="1"
                 required
+                defaultValue={meeting.openingHymn.number}
                 aria-describedby="openingHymnNumber-error"
                 className="w-full rounded border p-2"
               />
@@ -221,6 +237,7 @@ export default function NewMeetingPage() {
                 id="openingHymnTitle"
                 name="openingHymnTitle"
                 required
+                defaultValue={meeting.openingHymn.title}
                 aria-describedby="openingHymnTitle-error"
                 className="w-full rounded border p-2"
               />
@@ -248,6 +265,7 @@ export default function NewMeetingPage() {
                 id="openingPrayer"
                 name="openingPrayer"
                 required
+                defaultValue={meeting.openingPrayer}
                 aria-describedby="openingPrayer-error"
                 className="w-full rounded border p-2"
               />
@@ -280,6 +298,9 @@ export default function NewMeetingPage() {
                 id="wardBusiness"
                 name="wardBusiness"
                 rows={4}
+                defaultValue={meeting.wardBusiness
+                  .map((item) => item.description)
+                  .join('\n')}
                 placeholder="One item per line"
                 aria-describedby="wardBusiness-error"
                 className="w-full rounded border p-2"
@@ -307,9 +328,12 @@ export default function NewMeetingPage() {
                   type="checkbox"
                   name="stakeBusiness"
                   value="true"
+                  defaultChecked={meeting.stakeBusiness}
                   aria-describedby="stakeBusiness-error"
                 />
-                <span className="font-semibold">Stake Business</span>
+                <span className="font-semibold">
+                  Stake Business
+                </span>
               </label>
               <p
                 id="stakeBusiness-error"
@@ -342,6 +366,7 @@ export default function NewMeetingPage() {
                 name="sacramentHymnNumber"
                 min="1"
                 required
+                defaultValue={meeting.sacramentHymn.number}
                 aria-describedby="sacramentHymnNumber-error"
                 className="w-full rounded border p-2"
               />
@@ -369,6 +394,7 @@ export default function NewMeetingPage() {
                 id="sacramentHymnTitle"
                 name="sacramentHymnTitle"
                 required
+                defaultValue={meeting.sacramentHymn.title}
                 aria-describedby="sacramentHymnTitle-error"
                 className="w-full rounded border p-2"
               />
@@ -401,6 +427,12 @@ export default function NewMeetingPage() {
                 id="speakers"
                 name="speakers"
                 rows={6}
+                defaultValue={meeting.speakers
+                  .map(
+                    (speaker) =>
+                      `${speaker.name} | ${speaker.topic} | ${speaker.type}`
+                  )
+                  .join('\n')}
                 placeholder={`One per line using:
 Name | Topic | speaker
 
@@ -442,6 +474,7 @@ Choir | Amazing Grace | musical-number`}
                 name="closingHymnNumber"
                 min="1"
                 required
+                defaultValue={meeting.closingHymn.number}
                 aria-describedby="closingHymnNumber-error"
                 className="w-full rounded border p-2"
               />
@@ -469,6 +502,7 @@ Choir | Amazing Grace | musical-number`}
                 id="closingHymnTitle"
                 name="closingHymnTitle"
                 required
+                defaultValue={meeting.closingHymn.title}
                 aria-describedby="closingHymnTitle-error"
                 className="w-full rounded border p-2"
               />
@@ -496,6 +530,7 @@ Choir | Amazing Grace | musical-number`}
                 id="closingPrayer"
                 name="closingPrayer"
                 required
+                defaultValue={meeting.closingPrayer}
                 aria-describedby="closingPrayer-error"
                 className="w-full rounded border p-2"
               />
@@ -518,7 +553,7 @@ Choir | Amazing Grace | musical-number`}
             disabled={isPending}
             className="rounded bg-black px-4 py-2 font-semibold text-white disabled:cursor-not-allowed disabled:opacity-50"
           >
-            {isPending ? 'Creating...' : 'Create Meeting'}
+            {isPending ? 'Saving...' : 'Save Changes'}
           </button>
         </form>
       </div>
